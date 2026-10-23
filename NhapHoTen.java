@@ -11,7 +11,8 @@ public class NhapHoTen {
 
         // In ra màn hình họ tên vừa nhập
         System.out.println("Họ và tên của bạn là: " + hoTen);
-
+// ---> ĐÂY LÀ SỰ THAY ĐỔI: Thêm một câu chào mừng <---
+        System.out.println("Chúc " + hoTen + " học tốt Java và Git nhé!");
         // Đóng scanner
         scanner.close();
     }

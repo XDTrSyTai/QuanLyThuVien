@@ -90,9 +90,8 @@ class Sach {
     }
 }
 
-// Lớp Test để khởi tạo đối tượng Sach, kiểm tra ràng buộc đóng gói và quản lý
-// bằng ArrayList
-public class Test {
+// Lớp BTT8 để khởi tạo đối tượng Sach, kiểm tra ràng buộc đóng gói và quản lý bằng ArrayList
+public class BTT8 {
     // Thêm sách mới vào danh sách
     public static void themSach(ArrayList<Sach> danhSach, Sach sachMoi) {
         danhSach.add(sachMoi);
@@ -178,5 +177,12 @@ public class Test {
         // 5. Hiển thị lại danh sách sau khi cập nhật và xóa
         System.out.println("=== DANH SÁCH SÁCH SAU KHI CẬP NHẬT ===");
         hienThiDanhSach(danhSachSach);
+    }
+}
+
+// Lớp Test để chạy tương thích nếu chạy bằng lệnh 'java Test'
+class Test {
+    public static void main(String[] args) {
+        BTT8.main(args);
     }
 }

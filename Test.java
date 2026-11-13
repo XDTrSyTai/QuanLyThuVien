@@ -1,7 +1,9 @@
+import java.time.Year;
 import java.util.ArrayList;
 
-// Yêu cầu 1 & 2: Tạo lớp Sach biểu diễn thông tin cuốn sách và phương thức hiển thị
+// Lớp Sach biểu diễn thông tin về một cuốn sách (Đóng gói dữ liệu - Encapsulation)
 class Sach {
+    // Yêu cầu 1: Tất cả các thuộc tính được khai báo với từ khóa private
     private String maSach;
     private String tieuDe;
     private String tacGia;
@@ -12,16 +14,18 @@ class Sach {
     public Sach() {
     }
 
-    // Constructor đầy đủ tham số
+    // Yêu cầu 4: Constructor có tham số đầy đủ để khởi tạo tất cả các thuộc tính
+    // (Gọi các phương thức setter để đảm bảo dữ liệu khởi tạo cũng tuân theo điều
+    // kiện kiểm tra)
     public Sach(String maSach, String tieuDe, String tacGia, int namXuatBan, int soLuong) {
         this.maSach = maSach;
         this.tieuDe = tieuDe;
         this.tacGia = tacGia;
-        this.namXuatBan = namXuatBan;
-        this.soLuong = soLuong;
+        setNamXuatBan(namXuatBan);
+        setSoLuong(soLuong);
     }
 
-    // Các phương thức Getter và Setter
+    // Yêu cầu 2: Cung cấp đầy đủ các phương thức public getters và setters
     public String getMaSach() {
         return maSach;
     }
@@ -50,19 +54,32 @@ class Sach {
         return namXuatBan;
     }
 
+    // Yêu cầu 3: Kiểm tra namXuatBan > 0 và namXuatBan <= currentYear
     public void setNamXuatBan(int namXuatBan) {
-        this.namXuatBan = namXuatBan;
+        int currentYear = Year.now().getValue();
+        if (namXuatBan > 0 && namXuatBan <= currentYear) {
+            this.namXuatBan = namXuatBan;
+        } else {
+            System.out.println("[Lỗi] Năm xuất bản không hợp lệ (" + namXuatBan
+                    + "). Năm xuất bản phải lớn hơn 0 và không vượt quá " + currentYear + ".");
+        }
     }
 
     public int getSoLuong() {
         return soLuong;
     }
 
+    // Yêu cầu 3: Kiểm tra soLuong không âm (soLuong >= 0)
     public void setSoLuong(int soLuong) {
-        this.soLuong = soLuong;
+        if (soLuong >= 0) {
+            this.soLuong = soLuong;
+        } else {
+            System.out.println("[Lỗi] Số lượng sách không hợp lệ (" + soLuong
+                    + "). Số lượng không được là số âm.");
+        }
     }
 
-    // Yêu cầu 2: Phương thức hienThiThongTin() in chi tiết cuốn sách ra màn hình
+    // Phương thức hiển thị chi tiết thông tin cuốn sách ra màn hình
     public void hienThiThongTin() {
         System.out.println("Mã sách      : " + maSach);
         System.out.println("Tiêu đề      : " + tieuDe);
@@ -73,8 +90,9 @@ class Sach {
     }
 }
 
-// Yêu cầu 3 & 4: Lớp BTT7 kiểm thử đối tượng Sach và quản lý danh sách bằng ArrayList
-public class BTT7 {
+// Lớp Test để khởi tạo đối tượng Sach, kiểm tra ràng buộc đóng gói và quản lý
+// bằng ArrayList
+public class Test {
     // Thêm sách mới vào danh sách
     public static void themSach(ArrayList<Sach> danhSach, Sach sachMoi) {
         danhSach.add(sachMoi);
@@ -94,7 +112,7 @@ public class BTT7 {
     // Tìm kiếm sách theo mã sách
     public static Sach timSachTheoMa(ArrayList<Sach> danhSach, String maCanTim) {
         for (Sach s : danhSach) {
-            if (s.getMaSach().trim().equalsIgnoreCase(maCanTim.trim())) {
+            if (s.getMaSach().equalsIgnoreCase(maCanTim)) {
                 return s;
             }
         }
@@ -112,12 +130,12 @@ public class BTT7 {
     }
 
     public static void main(String[] args) {
-        // Yêu cầu 3: Tạo các đối tượng từ lớp Sach
+        // Tạo các đối tượng từ lớp Sach bằng constructor đầy đủ tham số
         Sach sach1 = new Sach("S001", "Lập trình hướng đối tượng với Java", "Nguyễn Văn A", 2023, 15);
         Sach sach2 = new Sach("S002", "Cấu trúc dữ liệu và Giải thuật", "Trần Thị B", 2022, 10);
         Sach sach3 = new Sach("S003", "Cơ sở dữ liệu SQL Server", "Lê Văn C", 2024, 20);
 
-        // Yêu cầu 4: Tạo và quản lý danh sách Sach bằng ArrayList
+        // Quản lý danh sách Sach bằng ArrayList
         ArrayList<Sach> danhSachSach = new ArrayList<>();
         themSach(danhSachSach, sach1);
         themSach(danhSachSach, sach2);
@@ -127,20 +145,29 @@ public class BTT7 {
         System.out.println("=== DANH SÁCH SÁCH TRONG THƯ VIỆN ===");
         hienThiDanhSach(danhSachSach);
 
-        // 2. Tìm kiếm và cập nhật số lượng sách
+        // 2. Kiểm tra điều kiện ràng buộc trong setNamXuatBan() và setSoLuong()
+        System.out.println("=== KIỂM TRA RÀNG BUỘC DỮ LIỆU (SETTERS) ===");
+        System.out
+                .println("-> Thử cập nhật năm xuất bản lớn hơn năm hiện tại (2035) và số lượng âm (-5) cho sách S001:");
+        sach1.setNamXuatBan(2035); // Sẽ báo lỗi và giữ nguyên năm cũ (2023)
+        sach1.setSoLuong(-5); // Sẽ báo lỗi và giữ nguyên số lượng cũ (15)
+        sach1.hienThiThongTin();
+
+        // 3. Tìm kiếm và cập nhật dữ liệu hợp lệ
         String maTim = "S002";
-        System.out.println("=== TÌM KIẾM & CẬP NHẬT SÁCH CÓ MÃ " + maTim + " ===");
+        System.out.println("=== TÌM KIẾM & CẬP NHẬT HỢP LỆ CHO SÁCH " + maTim + " ===");
         Sach ketQuaTim = timSachTheoMa(danhSachSach, maTim);
         if (ketQuaTim != null) {
+            ketQuaTim.setNamXuatBan(2025);
             ketQuaTim.setSoLuong(25);
-            System.out.println("Đã cập nhật số lượng mới cho sách " + maTim + ":");
+            System.out.println("Đã cập nhật thành công cho sách " + maTim + ":");
             ketQuaTim.hienThiThongTin();
         } else {
             System.out.println("Không tìm thấy sách có mã: " + maTim);
         }
 
-        // 3. Xóa một cuốn sách khỏi danh sách
-        String maXoa = "S001";
+        // 4. Xóa một cuốn sách khỏi danh sách
+        String maXoa = "S003";
         System.out.println("=== XÓA SÁCH CÓ MÃ " + maXoa + " ===");
         if (xoaSachTheoMa(danhSachSach, maXoa)) {
             System.out.println("Đã xóa thành công sách có mã " + maXoa + "!\n");
@@ -148,16 +175,8 @@ public class BTT7 {
             System.out.println("Không tìm thấy sách có mã " + maXoa + " để xóa!\n");
         }
 
-        // 4. Hiển thị lại danh sách sau khi cập nhật và xóa
+        // 5. Hiển thị lại danh sách sau khi cập nhật và xóa
         System.out.println("=== DANH SÁCH SÁCH SAU KHI CẬP NHẬT ===");
         hienThiDanhSach(danhSachSach);
     }
 }
-
-// Yêu cầu 3: Lớp Test theo đúng tên gọi trong đề bài
-class Test {
-    public static void main(String[] args) {
-        BTT7.main(args);
-    }
-}
-
